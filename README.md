@@ -22,3 +22,6 @@
 - **Effect size** should be named: `b`, `beta`, `ALT_EFFSIZE`,  or `normal.score.beta`.
 - **Standard error** should be named: `se`, or `normal.score.se`.
 - **Cohort reference allele frequency (RAF)** should be named: `af1`
+
+# Imputation of summary statistics for unmeasured SNPs 
+
