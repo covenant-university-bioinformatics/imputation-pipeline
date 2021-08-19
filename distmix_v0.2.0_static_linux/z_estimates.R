@@ -15,12 +15,12 @@ if (length(args)==0) {
 #### Z = (beta)/se
 #
 #
-## Case 2: If p-value and effect size (beat) are available:
+## Case 2: If p-value and effect size (beta) are available:
 #### Z= sign(Effect Size) * abs(qnorm(p-value/2))
 ### qnorm is the inverse cumulative distribution function of the normal distribution.
 
 
-df = read.table(args[1], header=TRUE)
+df = read.table(args[1], header=TRUE,sep="")
 head(df)
 if( "beta" %in% colnames(df)  &  "se" %in% colnames(df)){
   z= df$beta/df$se
