@@ -1,9 +1,0 @@
-pop wgt
-ASW 0.1
-CEU 0.15
-CHB 0.15
-CHS 0.125
-GBR 0.15
-MXL 0.1
-PUR 0.025
-YRI 0.2
