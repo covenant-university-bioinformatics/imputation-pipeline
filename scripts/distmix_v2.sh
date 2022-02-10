@@ -5,7 +5,7 @@
 # wget -c https://www.dropbox.com/sh/sw03zojcwzpdeed/AAC7YUZZxg1I_AVKq1vV1dwla/33kg_geno.gz?dl=0
 # wget -c https://www.dropbox.com/sh/r1q6q2cmg47lukw/AABSyMp-D6oJqLrJ3JeUWshQa/distmix2?dl=0
 
-declare -i minimumFields=6
+
 set -x;
 ##### Directories 
 bin_dir="/home/yagoubali/Projects/deployment/imputation-pipeline/scripts";
@@ -13,13 +13,6 @@ db_dir="/media/yagoubali/bioinfo2/pgwas/impute2"
 gwas_summary=$1;
 output_dir=$2;
 output="imputation.txt";
-
-
-
-## Datasets
-#Reference_Panels=${db_dir}/ref/33kg_geno.gz; ## 1000 Genomes Phase1 Release3; Number of Samples 1092; Number of populations 14; Hg19
-#Reference_Index=${db_dir}/ref/33kg_index.gz 
-#Populations_Weight=${bin_dir}/ref/pop.wgt;
 
 ##### Parameters
 distmix_version=$3 #{1,2}
@@ -41,26 +34,29 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
    Populations_Weight=$output_dir/pop.wgt 
    chromosome=${10};
    windowSize=${11};      # The size of the DIST prediction window (Mb).
-   wingSize=${12};        # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
-   else
+   wingSize=${12};
+           # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
+   if  [[  $distmix_version = 2 ]] ; then
+        measured_snps=${13}
+       if [[ -z "$measured_snps" ]]; then
+           measured_snps=500;
+        fi
+   fi
+   
+else
     chromosome=$5;
     windowSize=$6;      # The size of the DIST prediction window (Mb).
     wingSize=$7;        # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
+    
+   if [[  $distmix_version = 2 ]]; then
+       measured_snps=$8
+       if [[ -z "$measured_snps" ]]; then
+           measured_snps=500;
+       fi
+   fi
        
 fi
 
-
-if  [[  $distmix_version = 2 ]] && [[ $allele_frequency_information_is_available = "false" ]]; then
-    measured_snps=${13}
-    if [[ -z "$measured_snps" ]]; then
-        measured_snps=500;
-   fi
-elif [[  $distmix_version = 2 ]] && [[ $allele_frequency_information_is_available = "true" ]]; then
-    measured_snps=$8
-    if [[ -z "$measured_snps" ]]; then
-         measured_snps=500;
-     fi
- fi
 
 
 ##### Input file format, Dare will check this
@@ -97,29 +93,7 @@ fi
 
 
 
-
-########## Get column indexes and check minimum fields number
-read -r line < "$gwas_summary"     ## read first line from file into 'line'
-oldIFS="$IFS"                                   ## save current Internal Field Separator (IFS)
-IFS=$' '                                        ## set IFS to word-split on '\t'
-fieldarray=($line);                             ## fill 'fldarray' with fields in line
-IFS="$oldIFS"                                   ## restore original IFS
-nfields=(${#fieldarray[@]})                     ## get number of fields in 'line'
-
-
-if [[ "$nfields" -lt "$minimumFields" ]];   ## test against header
-then
-  echo "Please check your input file and try again. --File header Errors--";
-  
-fi
-
-#### check zscore filed and af1 are exist 
-
-af=$(echo $line |tr " " "\n"|grep -i 'af'| cut -f1);  # Cohort reference allele frequency (RAF).
 z=$(echo $line |tr " " "\n"|grep -i 'z'| cut  -f1);      # Zscore column
-
-
-
 
 ###### estimate z score if it is not exist
 if [[ $z -eq "" ]];
@@ -145,7 +119,7 @@ fi
 ###  ->1 User provided af  (cohort reference allele frequency (RAF)) && provided chromosome
 ###  ->2 User provided af  (cohort reference allele frequency (RAF)) && !provided chromosome (impute all chromosomes)
 ###  ->3 User !provided af  (cohort reference allele frequency (RAF)) && provided chromosome
-###  ->2 User !provided af1 (cohort reference allele frequency (RAF)) && !provided chromosome (impute all chromosomes)
+###  ->4 User !provided af1 (cohort reference allele frequency (RAF)) && !provided chromosome (impute all chromosomes)
 
 cmd=''
 if [[ $af != "" ]] && [[ $chr != "" ]]; then
@@ -157,6 +131,7 @@ elif [[ -z "$af" ]] && [[ $chr != "" ]]; then
 elif [[ -z "$af" ]] && [[ -z "$chr" ]]; then 
      cmd="-w $Populations_Weight  "
 fi    
+
 
 #./distmix_v2.sh sample.input.chr22.txt output 2 false 0.6 0.2 0.1 0.1 0.0 22
 #./distmix_v2.sh sample.input.chr22.wthAf1.txt 2 output true 22
