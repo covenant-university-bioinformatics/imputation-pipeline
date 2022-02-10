@@ -32,7 +32,7 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
     echo -e "EUR\t${EUR_weight}" >> $output_dir/pop.wgt
     echo -e "SAS\t${SAS_weight}" >> $output_dir/pop.wgt
    Populations_Weight=$output_dir/pop.wgt 
-   chromosome=${10};
+   chromosome=${10};  #{all, 1-22}
    windowSize=${11};      # The size of the DIST prediction window (Mb).
    wingSize=${12};
            # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
@@ -44,7 +44,7 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
    fi
    
 else
-    chromosome=$5;
+    chromosome=$5; #{all, 1-22}
     windowSize=$6;      # The size of the DIST prediction window (Mb).
     wingSize=$7;        # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
     
@@ -93,27 +93,6 @@ fi
 
 
 
-z=$(echo $line |tr " " "\n"|grep -i 'z'| cut  -f1);      # Zscore column
-
-###### estimate z score if it is not exist
-if [[ $z -eq "" ]];
-then
-  Rscript --vanilla ${bin_dir}/z_estimates.R ${input_dir}/$gwas_summary
-fi
-
-
-##### check again for zcore 
-
-read -r line < "$gwas_summary"     ## read first line from file into 'line'
-z=$(echo $line |tr " " "\n"|grep -i 'z'| cut -f1);
-
-if [[ $z -eq "" ]];
-then
-  echo "please provide:  z score, or beta and standard error, or beta and pvalue";
-  exit 1;
-fi
-
-
 ##### Imputation
 ### 4 senarios 
 ###  ->1 User provided af  (cohort reference allele frequency (RAF)) && provided chromosome
@@ -124,11 +103,11 @@ fi
 cmd=''
 if [[ $af != "" ]] && [[ $chr != "" ]]; then
        cmd="-c $chr "
-elif [[ $af != "" ]] && [[ -z "$chr" ]]; then 
+elif [[ $af != "" ]] && [[  $chr = "all" ]]; then 
        cmd=''
 elif [[ -z "$af" ]] && [[ $chr != "" ]]; then 
        cmd="-w $Populations_Weight -c $chr "
-elif [[ -z "$af" ]] && [[ -z "$chr" ]]; then 
+elif [[ -z "$af" ]] && [[ $chr = "all" ]]; then 
      cmd="-w $Populations_Weight  "
 fi    
 
