@@ -132,6 +132,7 @@ elif [[ -z "$af" ]] && [[ -z "$chr" ]]; then
      cmd="-w $Populations_Weight  "
 fi    
 
+
 #./distmix_v2.sh sample.input.chr22.txt output 2 false 0.6 0.2 0.1 0.1 0.0 22
 #./distmix_v2.sh sample.input.chr22.wthAf1.txt 2 output true 22
 #./distmix_v2.sh sample.input.chr22.txt output 1 false 0.6 0.2 0.1 0.1 0.0 22
