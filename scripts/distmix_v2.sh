@@ -32,7 +32,7 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
     echo -e "EUR\t${EUR_weight}" >> $output_dir/pop.wgt
     echo -e "SAS\t${SAS_weight}" >> $output_dir/pop.wgt
    Populations_Weight=$output_dir/pop.wgt 
-   chromosome=${10};
+   chromosome=${10};  #{all, 1-22}
    windowSize=${11};      # The size of the DIST prediction window (Mb).
    wingSize=${12};
            # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
@@ -44,7 +44,7 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
    fi
    
 else
-    chromosome=$5;
+    chromosome=$5; #{all, 1-22}
     windowSize=$6;      # The size of the DIST prediction window (Mb).
     wingSize=$7;        # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
     
@@ -103,16 +103,16 @@ fi
 cmd=''
 if [[ $af != "" ]] && [[ $chr != "" ]]; then
        cmd="-c $chr "
-elif [[ $af != "" ]] && [[ $chr = 'all' ]]; then 
+elif [[ $af != "" ]] && [[  $chr = "all" ]]; then 
        cmd=''
 elif [[ -z "$af" ]] && [[ $chr != "" ]]; then 
        cmd="-w $Populations_Weight -c $chr "
-elif [[ -z "$af" ]] && [[ $chr = 'all' ]]; then 
+elif [[ -z "$af" ]] && [[ $chr = "all" ]]; then 
      cmd="-w $Populations_Weight  "
 fi    
 
 
-#./distmix_v2.sh sample.input.chr22.txt output 2 false 0.6 0.2 0.1 0.1 0.0 22 
+#./distmix_v2.sh sample.input.chr22.txt output 2 false 0.6 0.2 0.1 0.1 0.0 22
 #./distmix_v2.sh sample.input.chr22.wthAf1.txt 2 output true 22
 #./distmix_v2.sh sample.input.chr22.txt output 1 false 0.6 0.2 0.1 0.1 0.0 22
 #./distmix_v2.sh sample.input.chr22.wthAf1.txt output 1 true 22
