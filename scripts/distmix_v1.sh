@@ -8,14 +8,11 @@
 
 set -x;
 ##### Directories 
-<<<<<<< HEAD
-bin_dir="/home/yagoubali/Projects/deployment/imputation-pipeline/scripts";
-db_dir="/media/yagoubali/bioinfo2/pgwas/impute2"
-=======
+
 bin_dir="/mnt/d/distmix_impute";
 db_dir="/mnt/d/distmix_impute"
 
->>>>>>> 419def8f8fddf4c2c28fd04a35aa0224ed401fb5
+
 gwas_summary=$1;
 output_dir=$2;
 output="imputation.txt";
@@ -40,13 +37,10 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
     YRI=${17} ### Yoruba in Ibadan, Nigeria (AFR)
 
     
-<<<<<<< HEAD
-    
-	touch $output_dir/pop.wgt    
-=======
+
 	touch $output_dir/pop.wgt
 	 echo -e "pop\twgt" > $output_dir/pop.wgt
->>>>>>> 419def8f8fddf4c2c28fd04a35aa0224ed401fb5
+
 	 echo -e "ASW\t${ASW}" >> $output_dir/pop.wgt
 	 echo -e "CEU\t${CEU}" >> $output_dir/pop.wgt
 	 echo -e "CHB\t${CHB}" >> $output_dir/pop.wgt
@@ -98,11 +92,9 @@ fi
 #10. se      # In case zscore is not provided 
 
 
-<<<<<<< HEAD
-#### set defulat Parameters
-=======
+
 #### set default Parameters
->>>>>>> 419def8f8fddf4c2c28fd04a35aa0224ed401fb5
+
 
 
 if [[ -z "$windowSize" ]];  then
@@ -119,13 +111,13 @@ fi
 
 
 cmd=''
-if [[ $af != "" ]] && [[ $chr != "" ]]; then
-       cmd="-c $chr "
-elif [[ $af != "" ]] && [[  $chr = "all" ]]; then 
+if [[ ${allele_frequency_information_is_available} = "true" ]] && [[ ${chromosome} != "all" ]]; then
+       cmd="-c $chromosome "
+elif [[ ${allele_frequency_information_is_available} = "true" ]] && [[  ${chromosome} = "all" ]]; then 
        cmd=''
-elif [[ -z "$af" ]] && [[ $chr != "" ]]; then 
-       cmd="-w $Populations_Weight -c $chr "
-elif [[ -z "$af" ]] && [[ $chr = "all" ]]; then 
+elif [[  ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} != "all" ]]; then 
+       cmd="-w $Populations_Weight -c ${chromosome} "
+elif [[ ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} = "all" ]]; then 
      cmd="-w $Populations_Weight  "
 fi    
 
@@ -136,13 +128,4 @@ fi
  ${bin_dir}/distmix  $gwas_summary  ${cmd} -o ${output_dir}/$output \
     -r ${db_dir}/ref/1kg_geno_af1.gz  -i ${db_dir}/ref/1kg_index.gz  \
     -n ${windowSize} -m ${wingSize}
-<<<<<<< HEAD
 
-
-
-
-
-
-
-=======
->>>>>>> 419def8f8fddf4c2c28fd04a35aa0224ed401fb5
