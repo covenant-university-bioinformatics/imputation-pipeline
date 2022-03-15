@@ -8,8 +8,9 @@
 
 set -x;
 ##### Directories 
-bin_dir="/home/yagoubali/Projects/deployment/imputation-pipeline/scripts";
-db_dir="/media/yagoubali/bioinfo2/pgwas/impute2"
+bin_dir="/mnt/d/distmix_impute";
+db_dir="/mnt/d/distmix_impute"
+
 gwas_summary=$1;
 output_dir=$2;
 output="imputation.txt";
@@ -34,8 +35,8 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
     YRI=${17} ### Yoruba in Ibadan, Nigeria (AFR)
 
     
-    
-	touch $output_dir/pop.wgt    
+	touch $output_dir/pop.wgt
+	 echo -e "pop\twgt" > $output_dir/pop.wgt
 	 echo -e "ASW\t${ASW}" >> $output_dir/pop.wgt
 	 echo -e "CEU\t${CEU}" >> $output_dir/pop.wgt
 	 echo -e "CHB\t${CHB}" >> $output_dir/pop.wgt
@@ -87,7 +88,7 @@ fi
 #10. se      # In case zscore is not provided 
 
 
-#### set defulat Parameters
+#### set default Parameters
 
 
 if [[ -z "$windowSize" ]];  then
@@ -121,10 +122,3 @@ fi
  ${bin_dir}/distmix  $gwas_summary  ${cmd} -o ${output_dir}/$output \
     -r ${db_dir}/ref/1kg_geno_af1.gz  -i ${db_dir}/ref/1kg_index.gz  \
     -n ${windowSize} -m ${wingSize}
-
-
-
-
-
-
-
