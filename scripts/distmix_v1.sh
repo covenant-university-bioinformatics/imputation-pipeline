@@ -7,7 +7,7 @@
 
 
 set -x;
-##### Directories 
+##### Directories
 
 bin_dir="/mnt/d/distmix_impute";
 db_dir="/mnt/d/distmix_impute"
@@ -36,7 +36,7 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
     TSI=${16}  ### Toscani in Italia (EUR)
     YRI=${17} ### Yoruba in Ibadan, Nigeria (AFR)
 
-    
+
 
 	touch $output_dir/pop.wgt
 	 echo -e "pop\twgt" > $output_dir/pop.wgt
@@ -57,10 +57,10 @@ if [[ $allele_frequency_information_is_available = "false"  ]]; then
 	 echo -e "YRI\t${YRI}" >> $output_dir/pop.wgt
 
 
-    
-    
-    
-   Populations_Weight=$output_dir/pop.wgt 
+
+
+
+   Populations_Weight=$output_dir/pop.wgt
    chromosome=${18};  #{all, 1-22}
    windowSize=${19};      # The size of the DIST prediction window (Mb).
    wingSize=${20};
@@ -69,7 +69,7 @@ else
     chromosome=$4; #{all, 1-22}
     windowSize=$5;      # The size of the DIST prediction window (Mb).
     wingSize=$6;        # The size of the area (wing) flanking the left and right of the DISTMIX prediction window (Mb).
-       
+
 fi
 
 
@@ -78,18 +78,18 @@ fi
 ### In case zscore is not provided, user has tow options:
      ## 1.  User shoud include  effect size (beta) and standard error (se); Z = (beta)/se
      ## 2. User shoud include  p-value and effect size (beta); Z= sign(Effect Size) * abs(qnorm(p-value/2)); where qnorm is the inverse cumulative distribution function  of the normal distribution.
-     
+
 ### Required columns' names
-# 1. rsid  
+# 1. rsid
 # 2. chr     # numerical
 # 3. bp      # position
-# 4. ref     # ref alele 
-# 5. alt     # alternative alele 
+# 4. ref     # ref alele
+# 5. alt     # alternative alele
 # 6. z       # zscore
-# 7. af     # cohort reference allele frequency (RAF) --- Optional 
-# 8. pvalue  # In case zscore is not provided 
-# 9. beta    # In case zscore is not provided 
-#10. se      # In case zscore is not provided 
+# 7. af     # cohort reference allele frequency (RAF) --- Optional
+# 8. pvalue  # In case zscore is not provided
+# 9. beta    # In case zscore is not provided
+#10. se      # In case zscore is not provided
 
 
 
@@ -98,10 +98,10 @@ fi
 
 
 if [[ -z "$windowSize" ]];  then
-  windowSize=1.0; 
+  windowSize=1.0;
 fi
 
-if [[ -z "$wingSize"  ]]; then  
+if [[ -z "$wingSize"  ]]; then
    wingSize=0.5;
 fi
 
@@ -113,13 +113,13 @@ fi
 cmd=''
 if [[ ${allele_frequency_information_is_available} = "true" ]] && [[ ${chromosome} != "all" ]]; then
        cmd="-c $chromosome "
-elif [[ ${allele_frequency_information_is_available} = "true" ]] && [[  ${chromosome} = "all" ]]; then 
+elif [[ ${allele_frequency_information_is_available} = "true" ]] && [[  ${chromosome} = "all" ]]; then
        cmd=''
-elif [[  ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} != "all" ]]; then 
+elif [[  ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} != "all" ]]; then
        cmd="-w $Populations_Weight -c ${chromosome} "
-elif [[ ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} = "all" ]]; then 
+elif [[ ${allele_frequency_information_is_available} = "false" ]] && [[ ${chromosome} = "all" ]]; then
      cmd="-w $Populations_Weight  "
-fi    
+fi
 
 
 #./distmix_v1.sh sample.input.chr22.txt output false 0.101 0.14 0.14 0.025 0.08 0.09 0.139 0.0 0.09 0.011 0.09 0.03 0.009 0.189 22
@@ -129,3 +129,6 @@ fi
     -r ${db_dir}/ref/1kg_geno_af1.gz  -i ${db_dir}/ref/1kg_index.gz  \
     -n ${windowSize} -m ${wingSize}
 
+gwas_basename=$(basename ${gwas_summary})
+
+  Rscript --vanilla ${bin_dir}/plot_frequency.R ${output_dir}/${gwas_basename} ${outputdir}
