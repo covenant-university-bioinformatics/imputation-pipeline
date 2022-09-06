@@ -27,8 +27,9 @@ import { validateInputs } from './service.util';
 //production
 const testPath =
   '/local/datasets/pgwas_test_files/impute/sample.input.chr22.wthAf1.txt';
+
 //development
-//const testPath = '/local/datasets/data/impute/sample.input.chr22.wthAf1.txt';
+// const testPath = '/local/datasets/data/impute/sample.input.chr22.wthAf1.txt';
 // const testPath = '/local/datasets/data/eqtl/UKB_bv_height_SMR_0.05.txt';
 
 @Injectable()
