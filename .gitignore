@@ -12,6 +12,8 @@ dev_depl/helm/redis-values.yaml
 .idea/**/tasks.xml
 .idea/dictionaries
 
+/abcz
+
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
