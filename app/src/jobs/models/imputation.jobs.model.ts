@@ -61,7 +61,6 @@ const ImputationJobSchema = new mongoose.Schema<ImputationJobsDoc, JobsModel>(
     inputFile: {
       type: String,
       required: [true, 'Please add a input filename'],
-      unique: true,
       trim: true,
     },
     imputationFile: {
